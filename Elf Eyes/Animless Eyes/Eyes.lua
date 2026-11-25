@@ -48,15 +48,13 @@
   local FEARRANDOMx = 0
   local FEARRANDOMy = 0
   local FF = 0
-  local T = 0
   local Boing = 0
+  local BoingX = 0
   local VEL = 0
 
 function events.tick()
-  T = T+0.05
   --Get Vanilla Head Rotation
  HeadRot = vanilla_model.HEAD:getOriginRot()
-  --print(HeadRot)
   if HeadRot[1] > 15 then --UP
     UP = 1
     DOWN = 0
@@ -129,8 +127,9 @@ function events.tick()
  FEARRANDOMy = FEAR*(math.random(-FearRand*100, FearRand*100)/100)
  NEWLPOS = vec(((LPos[1]*LEFT+LPos[2]*RIGHT)*math.abs(HeadRot[2]/50))+FEARRANDOMx, ((LPos[3]*UP+LPos[4]*DOWN)*math.abs(HeadRot[1]/90))+FEARRANDOMy)
  NEWRPOS = vec(((RPos[1]*LEFT+RPos[2]*RIGHT)*math.abs(HeadRot[2]/50))+FEARRANDOMx, ((RPos[3]*UP+RPos[4]*DOWN)*math.abs(HeadRot[1]/90))+FEARRANDOMy)
- VEL = math.floor((-(VEL+BLINK/1.1)/1.6)*1000)/1000
- Boing = 1+VEL
+ VEL = math.floor((-(VEL+BLINK)/1.3)*100)/100
+ Boing = 1+(math.sin(VEL))*1.4
+ BoingX = 1-math.sin(VEL)
 end
 
 function events.render(delta, context)
@@ -141,7 +140,7 @@ function events.render(delta, context)
     HEAD:setScale(math.lerp(HEADSIZE[1], BLINKPOWER, delta), math.lerp(HEADSIZE[2], 1/BLINKPOWER, delta), math.lerp(HEADSIZE[3], BLINKPOWER, delta))
   end
   if BouncyEye == true then
-    LEYE:setScale(math.lerp(REYESIZE[1], (Boing*FF)^-1, delta), math.lerp(REYESIZE[2], Boing*FF, delta), 1)
-    REYE:setScale(math.lerp(REYESIZE[1], (Boing*FF)^-1, delta), math.lerp(REYESIZE[2], Boing*FF, delta), 1)
+    LEYE:setScale(math.lerp(LEYESIZE[1], (BoingX)*FF, delta), math.lerp(LEYESIZE[2], Boing*FF, delta), 1)
+    REYE:setScale(math.lerp(REYESIZE[1], (BoingX)*FF, delta), math.lerp(REYESIZE[2], Boing*FF, delta), 1)
   end
 end
